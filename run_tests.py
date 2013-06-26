@@ -25,9 +25,11 @@ class TestSlap(unittest.TestCase):
         self.test_model.elements.append(e.UniformFlow(self.test_model,\
                 gradient, angle))
         print self.test_model.elements[0]
-        self.assertEqual(self.test_model.potential(10.,0.).real,1.0)
-        self.assertEqual(self.test_model.potential(10.,10.).real,1.0)
-        self.test_model.plot_flow_net(0., 100., 0., 100.,)
+        self.assertEqual(self.test_model.potential(10.,0.).real,-1.0)
+        self.assertEqual(self.test_model.potential(10.,10.).real,-1.0)
+        self.assertEqual(self.test_model.potential(-10.,-10.).real,1.0)
+        self.test_model.plot_head_fill(-50., 50., -50., 50.,
+                n_levels = 20, fmt = 'png', show = True, dpi_level = 120)
 
 
     # test head and potential function switches

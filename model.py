@@ -74,7 +74,8 @@ class Model:
         return 0
 
     def plot_flow_net(self, x_min, x_max, y_min, y_max, 
-            nx = 5, ny = 5, n_levels = 20, fmt = 'png'):
+            nx = 5, ny = 5, n_levels = 20, fmt = 'png',
+            show = False, dpi_level = 240):
         """plots the real and the complex part of the potential in a flow net.
         If the potential has a divergence term the complex part is omitted
         """
@@ -89,7 +90,8 @@ class Model:
                 pot = self.potential(x_lin[i], y_lin[j])
                 phi[j][i] = pot.real
                 psi[j][i] = pot.imag
-        f = plt.figure(num = None, dpi = 240, facecolor = 'w', edgecolor = 'k')
+        f = plt.figure(num = None, dpi = dpi_level, 
+                facecolor = 'w', edgecolor = 'k')
         f.suptitle('model flow net')
         cmap1 = mpl.cm.jet
         cmap2 = mpl.cm.bone
@@ -105,4 +107,37 @@ class Model:
         ax.set_ylabel('y [meters]')
         plotframe = 0
         plt.savefig(title + '.' + fmt, bbox_inches = plotframe, format = fmt)
+        if show == True:
+            plt.show()
+        return 0
+
+    def plot_head_fill(self, x_min, x_max, y_min, y_max, 
+            nx = 5, ny = 5, n_levels = 20, fmt = 'png',
+            show = False, dpi_level = 240):
+        """Plots a filled contour map of head
+        """
+        x_lin = np.linspace(x_min, x_max, nx)
+        y_lin = np.linspace(y_min, y_max, ny)
+        x, y = np.meshgrid(x_lin, y_lin )
+        head = np.zeros((nx, ny))
+        for i in range(len(x_lin)):
+            for j in range(len(y_lin)):
+                head[i][j] = self.head(x_lin[i], y_lin[j])
+                print x_lin[i], y_lin[j], head[i][j]
+        f = plt.figure(num = None, dpi = dpi_level, 
+                facecolor = 'w', edgecolor = 'k')
+        title = 'head_contours'
+        f.suptitle('model ' + title)
+        cmap1 = mpl.cm.jet
+        cmap2 = mpl.cm.bone
+        ax = f.add_subplot(111)
+        p1 = ax.contourf(x,y, head, n_levels, cmap = cmap1)
+        CB = plt.colorbar(p1, extend='both')
+        ax.set_aspect('equal')
+        ax.set_xlabel('x [meters]')
+        ax.set_ylabel('y [meters]')
+        plotframe = 0
+        plt.savefig(title + '.' + fmt, bbox_inches = plotframe, format = fmt)
+        if show == True:
+            plt.show()
         return 0

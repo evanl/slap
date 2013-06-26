@@ -49,4 +49,4 @@ class UniformFlow(Element):
         return '\tMagnitude: {0} \n\
         Direction: {1}'.format(self.parameter, self.angle_rad * 180 / np.pi)
     def pot_unit(self, x, y):
-        return complex(x,y) * np.exp( -1j * self.angle_rad)
+        return -complex(x,y) * np.exp( -1j * self.angle_rad)
