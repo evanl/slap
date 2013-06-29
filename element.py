@@ -12,6 +12,7 @@ class Element(object):
     def __init__(self, model_in, param_in):
         self.model = model_in
         self.parameter = param_in
+        self.has_unknown = False
     def __str__(self):
         print "Element"
         return 'Parameter {0}'.format(self.parameter)

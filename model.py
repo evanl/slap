@@ -97,7 +97,6 @@ class Model:
         cmap2 = mpl.cm.bone
         ax = f.add_subplot(111)
         p1 = ax.contour(x,y, phi, n_levels, cmap = cmap1)
-
         ax2 = ax.twinx()
         p2 = ax2.contour(x,y, psi, n_levels, cmap =cmap2 )
         ax.set_aspect('equal')
@@ -116,20 +115,19 @@ class Model:
             show = False, dpi_level = 240):
         """Plots a filled contour map of head
         """
+        title = 'head_contours'
+        
         x_lin = np.linspace(x_min, x_max, nx)
         y_lin = np.linspace(y_min, y_max, ny)
         x, y = np.meshgrid(x_lin, y_lin )
         head = np.zeros((nx, ny))
         for i in range(len(x_lin)):
             for j in range(len(y_lin)):
-                head[i][j] = self.head(x_lin[i], y_lin[j])
-                print x_lin[i], y_lin[j], head[i][j]
+                head[j][i] = self.head(x_lin[i], y_lin[j])
         f = plt.figure(num = None, dpi = dpi_level, 
                 facecolor = 'w', edgecolor = 'k')
-        title = 'head_contours'
         f.suptitle('model ' + title)
         cmap1 = mpl.cm.jet
-        cmap2 = mpl.cm.bone
         ax = f.add_subplot(111)
         p1 = ax.contourf(x,y, head, n_levels, cmap = cmap1)
         CB = plt.colorbar(p1, extend='both')
