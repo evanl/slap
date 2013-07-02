@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import mpl
+from time import time, clock
 
 class Model:
     def __init__(self, k0, thickness):
@@ -59,6 +60,7 @@ class Model:
         """
         if self.elements != []:
             phi = complex(0., 0.)
+            len(self.elements)
             for i in xrange(len(self.elements)):
                 if i != omit_index:
                     phi += self.elements[i].potential(x, y)
@@ -70,7 +72,25 @@ class Model:
     def solve(self, tolerance, max_iterations):
         # for each element, iterate so that each element can be solved 
         # without the contribution of the potential from the other elements 
+        t_init = time()
 
+        converged = False
+        iterations = 0
+
+        #checks the residual from the previous iteration
+        while converged == False:
+
+            # sets the system residual equal to zero
+
+            # for each element
+            for i in range(0,len(self.elements)):
+                converged = converged and self.elements[i].solve(omit_index = i)
+
+            iterations += 1
+
+        t_diff = time() - t_init
+        print "Converged in {0} iterations".format(iterations)
+        print "Solve took {0} seconds".format(t_diff)
         return 0
 
     def plot_flow_net(self, x_min, x_max, y_min, y_max, 

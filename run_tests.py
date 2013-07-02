@@ -14,23 +14,34 @@ class TestSlap(unittest.TestCase):
         self.assertEqual(10., self.test_model.conductivity(0., 0.))
         self.assertEqual(20., self.test_model.thickness(0., 0.))
         self.assertRaises(IndexError, lambda: self.test_model.potential(0.,0.))
-    # tests to be written
     def test_head_funcs(self):
         self.assertEqual(1125., self.test_model.pot_from_head(15., 0.,0.))
         self.assertEqual(3000., self.test_model.pot_from_head(25., 0.,0.))
 
     def test_uniform_flow(self):
+        self.test_model.elements = []
         gradient = 0.1
         angle = 0.
         self.test_model.elements.append(e.UniformFlow(self.test_model,\
                 gradient, angle))
-        print self.test_model.elements[0]
         self.assertEqual(self.test_model.potential(10.,0.).real,-1.0)
         self.assertEqual(self.test_model.potential(10.,10.).real,-1.0)
         self.assertEqual(self.test_model.potential(-10.,-10.).real,1.0)
-        self.test_model.plot_head_fill(-50., 50., -50., 50.,
-                n_levels = 20, fmt = 'png', show = True, dpi_level = 120)
-
+    def test_reference_point_pre_solve(self):
+        self.test_model.elements = []
+        gradient = 0.1
+        angle = 0.
+        self.test_model.elements.append(e.UniformFlow(self.test_model,\
+                gradient, angle))
+        head_reference = 30. 
+        xr = -1000.
+        yr = -1000.
+        c_init = self.test_model.pot_from_head(30, xr, yr)
+        self.assertEqual(c_init, 4000.)
+        self.test_model.elements.append(e.ReferencePoint(self.test_model, xr, yr, \
+                head_reference, c_initial = c_init))
+        self.assertEqual(self.test_model.potential(10.,0.),3999.)
+        self.assertEqual(self.test_model.potential(-10.,0.),4001.)
 
     # test head and potential function switches
     # test uniform flow
